@@ -9,4 +9,3 @@ create table if not exists todo(
     created_at text not null defult(datetime('now', 'localtime'))
 ) 
 ''')
-
