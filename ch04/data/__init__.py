@@ -10,4 +10,5 @@ def get_db():
         print("Connection")
         con = connect('mydb.db')
         cur = con.cursor()
+
 get_db()
