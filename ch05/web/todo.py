@@ -26,5 +26,6 @@ def get_one(task: str) -> TodoResponse:
 def modify_completed(task: str) -> TodoResponse:
     return service.modify_completed(Todo(task = task))
 
+@router.delete('/{task}')
 def delete_task(task: str) -> bool:
     return service.delete_task(Todo(task = task))
