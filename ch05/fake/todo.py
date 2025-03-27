@@ -44,3 +44,11 @@ def modify_completed(todo: Todo) -> TodoResponse:
     _todo = get_one(todo)
     _todo.completed = not _todo.completed
     return _todo
+
+def delete_task(todo: Todo) -> bool:
+    #해당하는 task get_one으로 찾기
+    _todo = get_one(todo)
+    if _todo is None:
+        return False
+    _todos.remove(_todo)
+    return True

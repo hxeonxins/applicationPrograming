@@ -15,3 +15,6 @@ def get_one(todo: Todo) -> TodoResponse:
 
 def modify_completed(todo: Todo) -> TodoResponse:
     return data.modify_completed(todo)
+
+def delete_task(todo: Todo) -> bool:
+    return data.delete_task(todo)
