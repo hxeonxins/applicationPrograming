@@ -16,4 +16,12 @@ def get_all() -> List[TodoResponse]:
 router.post('')
 def insert_one(task: Todo) -> TodoResponse:
     return service.insert_one(task)
+
 #단건 조회, 수정, 삭제 일 때는 str 쓰자~
+@router.get('/{task}')
+def get_one(task: str) -> TodoResponse:
+    return service.get_one(Todo(task = task))
+@router.patch('/{task}')
+
+def modify_completed(task: str) -> TodoResponse:
+    return service.modify_completed(Todo(task = task))

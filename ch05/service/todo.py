@@ -9,3 +9,9 @@ def get_all() -> List[TodoResponse]:
 
 def insert_one(todo: Todo) -> TodoResponse:
     return data.insert_one(todo)
+
+def get_one(todo: Todo) -> TodoResponse:
+    return data.get_one(todo)
+
+def modify_completed(todo: Todo) -> TodoResponse:
+    return data.modify_completed(todo)

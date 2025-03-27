@@ -27,9 +27,6 @@ def get_all() -> List[TodoResponse]:
 
 def insert_one(todo: Todo) -> TodoResponse:
     global todo_id
-    # if next((x for x in _todos if x.task == todo.task), None):
-    #     print("중복됨")
-    #     return None
     todo_id = todo_id+1
     _todos.append(TodoResponse(
         todo_id=todo_id,
@@ -38,3 +35,12 @@ def insert_one(todo: Todo) -> TodoResponse:
         created_at=datetime.now()
     ))
     return _todos[todo_id]
+
+def get_one(todo: Todo) -> TodoResponse:
+    _todo = next((x for x in _todos if x.task == todo.task), None)
+    return _todo
+
+def modify_completed(todo: Todo) -> TodoResponse:
+    _todo = get_one(todo)
+    _todo.completed = not _todo.completed
+    return _todo

@@ -7,7 +7,7 @@ from ch04.models import TodoResponse, Todo
 
 cur.execute('''
 create table if not exists todo(
-    task_id integer primary key autoincrement,
+    todo_id integer primary key autoincrement,
     task text not null unique,
     completed integer not null default 0,
     created_at text not null default(datetime('now', 'localtime'))
