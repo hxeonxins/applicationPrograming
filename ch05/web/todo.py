@@ -1,7 +1,8 @@
+from fastapi import HTTPException
 from typing import List
-
 from fastapi import APIRouter
 
+from ch05.error import Missing
 from ch05.model.todo import TodoResponse, Todo
 from ch05.service import todo as service
 
@@ -20,7 +21,10 @@ def insert_one(task: Todo) -> TodoResponse:
 #단건 조회, 수정, 삭제 일 때는 str 쓰자~
 @router.get('/{task}')
 def get_one(task: str) -> TodoResponse:
-    return service.get_one(Todo(task = task))
+    try:
+        return service.get_one(Todo(task = task))
+    except HTTPException(status_code=404):
+        raise Missing(message=f'task {task} was not found')
 @router.patch('/{task}')
 
 def modify_completed(task: str) -> TodoResponse:

@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List
 
+from ch05.error import Missing
 from ch05.model.todo import TodoResponse, Todo
 
 _todos = [
@@ -38,6 +39,11 @@ def insert_one(todo: Todo) -> TodoResponse:
 
 def get_one(todo: Todo) -> TodoResponse:
     _todo = next((x for x in _todos if x.task == todo.task), None)
+
+    #exception
+    if _todo is None:
+        raise Missing(message=f'todo was not found')
+
     return _todo
 
 def modify_completed(todo: Todo) -> TodoResponse:
