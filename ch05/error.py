@@ -10,6 +10,13 @@ class Missing(Exception):
     def __init__(self, message):
         super.__init__(self, message)
         self.message = message
+
+#중복 에러 처리
+class Duplicate(Exception):
+    def __init__(self, message):
+        super.__init__(self, message)
+        self.message = message
+
 #
 # def get_one(task: str):
 #     if task != 'task1':

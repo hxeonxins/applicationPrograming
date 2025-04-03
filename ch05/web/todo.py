@@ -25,8 +25,8 @@ def get_one(task: str) -> TodoResponse:
         return service.get_one(Todo(task = task))
     except HTTPException(status_code=404):
         raise Missing(message=f'task {task} was not found')
-@router.patch('/{task}')
 
+@router.patch('/{task}')
 def modify_completed(task: str) -> TodoResponse:
     return service.modify_completed(Todo(task = task))
 
