@@ -10,11 +10,11 @@ def get_all() -> List[TodoResponse]:
 def insert_one(todo: Todo) -> TodoResponse:
     return data.insert_one(todo)
 
-def get_one(todo: Todo) -> TodoResponse:
-    return data.get_one(todo)
+def get_one(todo_id: int) -> TodoResponse:
+    return data.get_one(todo_id)
 
 def modify_completed(todo: Todo) -> TodoResponse:
     return data.modify_completed(todo)
 
-def delete_task(todo: Todo) -> bool:
-    return data.delete_task(todo)
+def delete_task(todo_id: int) -> bool:
+    return data.delete_task(todo_id)

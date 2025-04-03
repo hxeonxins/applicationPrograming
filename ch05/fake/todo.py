@@ -37,8 +37,8 @@ def insert_one(todo: Todo) -> TodoResponse:
     ))
     return _todos[todo_id]
 
-def get_one(todo: Todo) -> TodoResponse:
-    _todo = next((x for x in _todos if x.task == todo.task), None)
+def get_one(todo_id: int) -> TodoResponse:
+    _todo = next((x for x in _todos if x.todo_id == todo_id), None)
 
     #exception
     if _todo is None:
@@ -51,9 +51,9 @@ def modify_completed(todo: Todo) -> TodoResponse:
     _todo.completed = not _todo.completed
     return _todo
 
-def delete_task(todo: Todo) -> bool:
+def delete_task(todo_id: int) -> bool:
     #해당하는 task get_one으로 찾기
-    _todo = get_one(todo)
+    _todo = get_one(todo_id)
     if _todo is None:
         return False
     _todos.remove(_todo)
