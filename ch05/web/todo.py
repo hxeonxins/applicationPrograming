@@ -14,7 +14,7 @@ router = APIRouter(prefix="/todo") #todo로 들어오는 엔드 포인트 관리
 def get_all() -> List[TodoResponse]:
     return service.get_all()
 
-router.post('')
+@router.post('')
 def insert_one(task: Todo) -> TodoResponse:
     return service.insert_one(task)
 
