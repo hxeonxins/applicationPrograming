@@ -19,17 +19,17 @@ cur.executescript(
 )
 
 
-# 객체를 만듩어 주는 공간. 함수 ㅏ그래도 객체 만들어서 리턴
+# 객체를 만들어 주는 공간. 객체 만들어서 리턴
 def row_to_model(entity: tuple) -> List[DepartmentResponse]:
-    id, name, quota, descripstion = entity
+    id, name, quota, description = entity
     return DepartmentResponse(
         id = id,
         name = name,
         quota = quota,
-        description = descripstion,
+        description = description,
     )
 
 def find_all() -> List[DepartmentResponse]:
     query = "select * from department"
     cur.execute(query)
-    return {row_to_model((row)) for row in cur.fetchall()}
+    return {row_to_model((row)) for row in cur.fetch_all()}
