@@ -10,3 +10,10 @@ class Department(BaseModel):
 
 class DepartmentResponse(Department):
     id: int
+
+
+class DepartmentOptionalResponse(Department):
+    id: Optional[int]
+    name: Optional[str]
+    quota: Optional[int] = 0
+    description: Optional[str] = None

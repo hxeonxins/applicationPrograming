@@ -1,6 +1,7 @@
 # 연결 -> singleton
 from sqlite3 import Connection, Cursor, connect
 from typing import Optional
+from .department import find_all, find_by_id, save
 
 con: Optional[Connection] = None
 cur: Optional[Cursor] = None
