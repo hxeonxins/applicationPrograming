@@ -2,13 +2,13 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException, Body
 
-from ch06_school import data
+from ch06_school.data import department as data
 from ch06_school.error import Missing, Duplicate
 from ch06_school.model.department import DepartmentResponse
 from ch06_school.model.department import Department
 router = APIRouter(prefix="/departments")
 
-router.get("/")
+@router.get("/")
 def get_all() -> List[DepartmentResponse]:
     return data.find_all()
 

@@ -11,7 +11,7 @@ from ch06_school.model.department import DepartmentResponse, Department
 cur.executescript(
     '''
     create table if not EXISTS department (
-        id int primary key auto_increment,
+        id integer primary key autoincrement,
         name text not null unique,
         quota int not null default 0,
         description text
@@ -36,7 +36,7 @@ def row_to_model(entity: tuple) -> List[DepartmentResponse]:
 def find_all() -> List[DepartmentResponse]:
     query = "select * from department"
     cur.execute(query)
-    return {row_to_model((row)) for row in cur.fetch_all()}
+    return [row_to_model((row)) for row in cur.fetchall()]
 
 def find_by_id(id: int) -> DepartmentResponse:
     query = f"select * from department where id = {id}"
