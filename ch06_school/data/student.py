@@ -7,7 +7,7 @@ from ch06_school.model.student import StudentResponse
 cur.executescript(
     '''
     create table if not EXISTS student(
-        id int primary key auto_increment,
+        id int auto_increment primary key,
         name text not null,
         score real not null default 0,,
         department_id integer,
