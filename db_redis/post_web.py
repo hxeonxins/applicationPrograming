@@ -1,5 +1,6 @@
 # 게시판 post 페이징으로 전체 조회
 import json
+from datetime import datetime
 
 import redis
 from fastapi import Query
@@ -36,7 +37,7 @@ def get_post(page: int = Query(default=1, ge=1), size: int = Query(default=10, l
         return {
             "page": page,
             "size": size,
-            "total": int(redis_client.get('post:total')),
+            "total": int(redis_client.get('posts:total')),
             "posts": json.loads(cached)
         }
 
@@ -59,7 +60,7 @@ def get_post(page: int = Query(default=1, ge=1), size: int = Query(default=10, l
     conn.close()
 
     redis_client.setex('posts:total', 60, total)
-    redis_client.setex(cache_key, 60, json.dumps(posts))
+    redis_client.setex(cache_key, 60, json.dumps(posts, default=serialize_datetime))
 
     return {
         "page": page,
@@ -67,6 +68,12 @@ def get_post(page: int = Query(default=1, ge=1), size: int = Query(default=10, l
         "total": total,
         "posts": posts
     }
+
+#직렬화
+def serialize_datetime(value):
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
 
 
 if __name__ == "__main__":
