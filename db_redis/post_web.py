@@ -1,4 +1,7 @@
 # 게시판 post 페이징으로 전체 조회
+import json
+
+import redis
 from fastapi import Query
 
 import pymysql
@@ -6,6 +9,9 @@ import uvicorn
 from fastapi import FastAPI
 
 app = FastAPI()
+
+#redis로 게시글 조회하기
+redis_client = redis.Redis(host="localhost", port=6379, db=0)
 
 #디비 접속
 def get_connect():
@@ -20,6 +26,20 @@ def get_connect():
 
 @app.get("/post")
 def get_post(page: int = Query(default=1, ge=1), size: int = Query(default=10, le=100)):
+    #키 값 정의
+    cache_key = f"post:{page}:size:{size}"
+
+    #redis에 있으면 디비 접속할 필요 없음
+    cached = redis_client.get(cache_key, page)
+    if cached:
+        print("redis cached")
+        return {
+            "page": page,
+            "size": size,
+            "total": int(redis_client.get('post:total')),
+            "posts": json.loads(cached)
+        }
+
     #db 접속
     conn = get_connect()
     cur = conn.cursor()
@@ -37,6 +57,9 @@ def get_post(page: int = Query(default=1, ge=1), size: int = Query(default=10, l
 
     cur.close()
     conn.close()
+
+    redis_client.setex('posts:total', 60, total)
+    redis_client.setex(cache_key, 60, json.dumps(posts))
 
     return {
         "page": page,
