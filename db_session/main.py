@@ -47,21 +47,17 @@ def login_jwt(response: Response, login_user: LoginUser = Body()):
     # return {"access_token": access_token}
 
 # 권한별 페이지 리턴
-@app.get("/session/page")
-def page(request: Request):
-    session_id = request.cookies.get(SESSION_COOKIE_NAME)
-    if not session_id:
-        raise HTTPException(status_code=404, detail="Invalid session id")
-    get_user = redis_client.get(session_id)
-    get_user = json.loads(get_user)
+@app.get("/jwt/page")
+def page_jwt(request: Request):
+    access_token = request.cookies.get("access_token")
+    claims = decode_access_token(access_token)
+    username = claims.get("username")
+    is_admin = claims.get("admin", False)
 
-    if get_user is None:
-        raise HTTPException(status_code=404, detail="Invalid session id")
-
-    # 권한 별 리턴
-    if str(get_user['admin']) == "True":
-        return Response(content="admin page", status_code=200)
-    return Response(content="user page", status_code=200)
+    if is_admin:
+        return "admin page"
+    else:
+        return f"{username} user page"
 
 # 쿠키 없애기
 @app.post("/jwt/logout")
