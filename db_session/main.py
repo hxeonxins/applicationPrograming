@@ -4,6 +4,7 @@ import redis
 import uvicorn
 from fastapi import FastAPI, Body, HTTPException
 from jose import jwt
+from starlette import status
 from starlette.requests import Request
 from starlette.responses import Response, RedirectResponse
 
@@ -30,7 +31,20 @@ def login_jwt(response: Response, login_user: LoginUser = Body()):
 
     # jwt 토큰 생성
     access_token = create_access_token(data=token_data)
-    return {"access_token": access_token}
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        samesite="strict",
+        secure=False,
+        path="/"
+    )
+    response.status_code = status.HTTP_200_OK
+    response.body = b"jwt login ok"
+    return response
+
+    # return {"access_token": access_token}
 
 # 권한별 페이지 리턴
 @app.get("/session/page")
@@ -50,14 +64,11 @@ def page(request: Request):
     return Response(content="user page", status_code=200)
 
 # 쿠키 없애기
-@app.post("/session/logout")
-def logout(request: Request, response: Response):
-    session_id = request.cookies.get(SESSION_COOKIE_NAME)
-    if session_id:
-        redis_client.delete(session_id)
-        response.delete_cookie(SESSION_COOKIE_NAME)
-        response.body = b"session logout success"
-        response.status_code = 200
+@app.post("/jwt/logout")
+def logout_jwt(response: Response):
+    response.delete_cookie("access_token")
+    response.status_code = status.HTTP_200_OK
+    response.body = b"jwt logout ok"
     return response
 
 if __name__ == "__main__":
