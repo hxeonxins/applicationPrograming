@@ -15,9 +15,9 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def decode_access_token(token: str):
+def decode_access_token(access_token: str):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload.get("username")
+        payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
     except JWTError:
         raise JWTError("Invalid access token")

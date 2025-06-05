@@ -1,14 +1,16 @@
 import json
+import os
+import shutil
 import uuid
 import redis
 import uvicorn
-from fastapi import FastAPI, Body, HTTPException
+from fastapi import FastAPI, Body, HTTPException, UploadFile, File
 from jose import jwt
 from starlette import status
 from starlette.requests import Request
 from starlette.responses import Response, RedirectResponse
 
-from db_session.jwt_util import create_access_token
+from db_session.jwt_util import create_access_token, decode_access_token
 from db_session.login import fake_users, LoginUser
 
 app = FastAPI()
@@ -66,6 +68,27 @@ def logout_jwt(response: Response):
     response.status_code = status.HTTP_200_OK
     response.body = b"jwt logout ok"
     return response
+
+
+os.makedirs("./uploads", exist_ok=True)
+@app.post("/uploads")
+def upload_image(image: UploadFile = File(...)):
+    if not image.content_type.startswith("image/"):
+        raise HTTPException(status_code=404, detail="Invalid image type")
+
+    name, ext = os.path.splitext(image.filename)
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    save_name = f"{name}_{timestamp}.{ext}"
+
+    image_path = os.path.join("./uploads", save_name)
+
+    with open(image_path, "wb") as f:
+        shutil.copyfileobj(image.file, f)
+
+    # db storaged
+    return {"image_name" : save_name,
+            "image_path" : image_path,}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", port=8000, host="0.0.0.0", reload=True)
